@@ -20,6 +20,15 @@
 *.so.*
 *.dylib
 
+# Visual studio local files
+*.sdf
+*.suo
+*.user
+*.VC.db
+ipch
+Debug
+Release
+
 # Executables
 *.exe
 *.out
@@ -30,4 +39,3 @@
 
 # Debug files
 *.dSYM/
-*.su
