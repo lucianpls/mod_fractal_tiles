@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\mod_fractal_tiles.cpp" />
+    <ClCompile Include="src\mod_fractal_tiles.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -104,12 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>\Apache24\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libhttpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libhttpd.lib;libapr-1.lib;libaprutil-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>\Apache24\lib</AdditionalLibraryDirectories>
+      <AdditionalOptions>/EXPORT:fractal_tiles_module,@1</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
