@@ -20,7 +20,6 @@ static void *create_dir_conf(apr_pool_t *p, char *dummy)
 
 // Returns a table read from a file, or NULL and an error message
 static apr_table_t *read_pKVP_from_file(apr_pool_t *pool, const char *fname, char **err_message)
-
 {
   // Should parse it here and initialize the configuration structure
   ap_configfile_t *cfg_file;
