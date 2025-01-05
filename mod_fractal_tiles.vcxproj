@@ -11,15 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\mod_fractal_tiles.c" />
+    <ClCompile Include="src\mod_fractal_tiles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="LICENSE" />
     <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\fractal_tiles.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{20108E23-7738-486B-9C5F-995CB6C838AB}</ProjectGuid>
@@ -82,7 +79,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libhttpd.lib;lib$(apr).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libahtse.lib;libhttpd.lib;lib$(apr).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /y $(TargetPath) $(prefix)\modules</Command>
@@ -107,7 +104,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libhttpd.lib;lib$(apr).lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libahtse.lib;libhttpd.lib;lib$(apr).lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /y $(TargetPath) $(prefix)\modules</Command>

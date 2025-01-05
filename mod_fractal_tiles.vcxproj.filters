@@ -26,12 +26,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\fractal_tiles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\mod_fractal_tiles.c">
+    <ClCompile Include="src\mod_fractal_tiles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
