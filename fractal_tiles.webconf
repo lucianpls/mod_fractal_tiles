@@ -1,0 +1,4 @@
+PageSize 256 256 1 1
+Size 2147483648 2147483648 1 1
+Format image/png
+BoundingBox -1.5,-1,0.5,1
