@@ -6,8 +6,10 @@
 #include <ahtse.h>
 #include <http_request.h>
 #include <apr_strings.h>
-#include <complex>
 #include <http_log.h>
+#include <complex>
+
+//#include <chrono>
 
 NS_AHTSE_USE
 NS_ICD_USE
@@ -52,30 +54,25 @@ static const char *read_config(cmd_parms *cmd, void *dconf, const char *src)
 
 // Build a fractal image, return the error code or SUCCESS
 // This is basic Mandelbrot, no speed-ups
-void *generateTile(sz5 tile, fractal_conf* cfg, request_rec* r)
+void* generateTile(sz5 tile, fractal_conf* cfg, void* data)
 {
-    size_t tile_size = cfg->raster.pagebytes();
     auto size = cfg->raster.pagesize.x; // Size of the tile, always square
     auto bands = cfg->raster.pagesize.c; // Number of bands, always 1
-    // We know it's a byte data type, allocate it
-    uint8_t* data = (uint8_t*)apr_pcalloc(r->pool, tile_size);
-    if (!data)
-        return nullptr;
-
+    auto pixels = (unsigned char*)data;
     auto resolution = cfg->raster.rsets[tile.l].rx;
     for (int y = 0; y < size; y++) {
         double imaginary = cfg->raster.bbox.ymax - (tile.y * size + y) * resolution;
         std::complex<double> c(0, imaginary);
         for (int x = 0; x < size; x++) {
             c.real(cfg->raster.bbox.xmin + (tile.x * size + x) * resolution);
-            std::complex<double> z(0,0);
+            std::complex<double> z(0, 0);
             int i = 0;
             for (; i < 255; i++) {
                 z = z * z + c;
                 if (std::norm(z) > 4)
                     break;
             }
-            data[y * size + x] = i;
+            pixels[y * size + x] = i;
         }
     }
     return data;
@@ -122,7 +119,20 @@ static int handler(request_rec *r)
         tile.y >= cfg->raster.rsets[tile.l].h)
         return sendEmptyTile(r, cfg->raster.missing);
 
-    auto data = generateTile(tile, cfg, r);
+    size_t tile_size = cfg->raster.pagebytes();
+    auto size = cfg->raster.pagesize.x; // Size of the tile, always square
+    auto bands = cfg->raster.pagesize.c; // Number of bands, always 1
+    // We know it's a byte data type, allocate it
+    auto data = apr_palloc(r->pool, tile_size);
+    SERVER_ERR_IF(!data, r, "Allocation error");
+
+    //auto t1 = std::chrono::high_resolution_clock::now();
+    data = generateTile(tile, cfg, data);
+    SERVER_ERR_IF(!data, r, "Rendering error");
+    //auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>
+    //    (std::chrono::high_resolution_clock::now() - t1).count();
+    //LOG(r, "Generated tile %d %d %d %d in %d ms", tile.x, tile.y, tile.l, tile.z, time_span);
+
     storage_manager src(data, cfg->raster.pagebytes());
     storage_manager dst(apr_palloc(r->pool, cfg->max_size), cfg->max_size);
 
