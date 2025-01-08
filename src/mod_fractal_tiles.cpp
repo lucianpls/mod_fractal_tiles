@@ -119,9 +119,7 @@ static int handler(request_rec *r)
         tile.y >= cfg->raster.rsets[tile.l].h)
         return sendEmptyTile(r, cfg->raster.missing);
 
-    size_t tile_size = cfg->raster.pagebytes();
-    auto size = cfg->raster.pagesize.x; // Size of the tile, always square
-    auto bands = cfg->raster.pagesize.c; // Number of bands, always 1
+    auto tile_size = cfg->raster.pagebytes();
     // We know it's a byte data type, allocate it
     auto data = apr_palloc(r->pool, tile_size);
     SERVER_ERR_IF(!data, r, "Allocation error");
@@ -133,7 +131,7 @@ static int handler(request_rec *r)
     //    (std::chrono::high_resolution_clock::now() - t1).count();
     //LOG(r, "Generated tile %d %d %d %d in %d ms", tile.x, tile.y, tile.l, tile.z, time_span);
 
-    storage_manager src(data, cfg->raster.pagebytes());
+    storage_manager src(data, tile_size);
     storage_manager dst(apr_palloc(r->pool, cfg->max_size), cfg->max_size);
 
     const char* out_mime = "image/png";
