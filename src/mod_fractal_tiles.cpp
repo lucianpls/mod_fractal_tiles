@@ -57,13 +57,13 @@ static const char *read_config(cmd_parms *cmd, void *dconf, const char *src)
 void* generateTile(sz5 tile, fractal_conf* cfg, void* data)
 {
     auto size = cfg->raster.pagesize.x; // Size of the tile, always square
-    auto bands = cfg->raster.pagesize.c; // Number of bands, always 1
+    //auto bands = cfg->raster.pagesize.c; // Number of bands, always 1
     auto pixels = (unsigned char*)data;
     auto resolution = cfg->raster.rsets[tile.l].rx;
-    for (int y = 0; y < size; y++) {
+    for (size_t y = 0; y < size; y++) {
         double imaginary = cfg->raster.bbox.ymax - (tile.y * size + y) * resolution;
         std::complex<double> c(0, imaginary);
-        for (int x = 0; x < size; x++) {
+        for (size_t x = 0; x < size; x++) {
             c.real(cfg->raster.bbox.xmin + (tile.x * size + x) * resolution);
             std::complex<double> z(0, 0);
             int i = 0;
@@ -145,7 +145,7 @@ static int handler(request_rec *r)
         out_params.reset();
 
         message = png_encode(out_params, src, dst);
-        SERVER_ERR_IF(message, r, message);
+        SERVER_ERR_IF(message, r, "%s", message);
         break;
     }
     default:
