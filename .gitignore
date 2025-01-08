@@ -40,4 +40,6 @@ Release
 # Debug files
 *.dSYM/
 
+*.lcl
 .vs
+.vscode
